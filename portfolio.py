@@ -1,19 +1,22 @@
-from pandas.io.data import DataReader
+#from pandas.io.data import DataReader
 import datetime
 
 
 class Portfolio(object):
-    def __init__(self):
+    def __init__(self, data_reader):
         self._current_holdings = []
         self._current_cash = 0
         self._current_date = None
         self._total_cash_input = 0
+        self._data_reader = data_reader
 
     def _nextClosingPrice(self, symbol):
         date = self._current_date
         for _ in range(5):
             try:
-                stock = DataReader(symbol, 'yahoo', date)
+                # stock = DataReader(symbol, 'yahoo', date)
+                stock = self._data_reader.fetch(symbol, 'yahoo', date,
+                        date + datetime.timedelta(days=10))
                 if stock.empty:
                     date = date - datetime.timedelta(days=1)
                     continue

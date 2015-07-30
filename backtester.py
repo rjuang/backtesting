@@ -2,18 +2,18 @@ import datetime
 import portfolio
 
 class Backtester(object):
-    def __init__(self):
+    def __init__(self, data_reader):
         self.historical_networth = []
         self.historical_action = []
         self.historical_holdings = []
         self.historical_cash_input = []
 
-        self.current_portfolio = portfolio.Portfolio()
+        self.current_portfolio = portfolio.Portfolio(data_reader)
 
     def test(self, strategy, start_date=None, end_date=None,
             starting_balance=10000, rebalance_period=33):
         if start_date is None:
-            start_date = datetime.date(2001, 1, 1)
+            start_date = datetime.date(2007, 1, 1)
         if end_date is None:
             end_date = datetime.date.today()
 
@@ -45,10 +45,11 @@ class Backtester(object):
 
             print ('%s: Total = %0.3f | Total Input = %0.3f | '
                     'Change: = %0.3f [%0.3f %%] | %0.3f %% per year '
-                    '(over %0.3f years)') % (
+                    '(over %0.3f years) | %s ') % (
                     current_date.isoformat(),
                     self.historical_networth[-1][-1],
                     total_input,
-                    gain, gain_pct, gain_per_year, total_years)
+                    gain, gain_pct, gain_per_year, total_years,
+                    action)
 
             current_date += delta
